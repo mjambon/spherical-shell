@@ -12,12 +12,26 @@ let print_vector v =
     (String.concat "," (List.map (fun x -> sprintf "%g" x) l))
 
 let main () =
-  let d = 20 in
-  let r1 = 0.9 in
+  Random.self_init ();
+  let dim = 100 in
+  let r1 = 0.95 in
   let r2 = 1. in
-  print_header d;
-  for i = 1 to 100 do
-    print_vector (Shell.pick d r1 r2)
-  done
+  let excl_radius = sqrt 2. *. r2 in
+  let points = Shell.pick_excl ~dim ~r1 ~r2 ~excl_radius in
+  print_header dim;
+  List.iter print_vector points;
+  flush stdout;
+
+  eprintf "\
+Number of dimensions: %i
+r1 = %g
+r2 = %g
+Exclusion radius: %g
+Number of points generated: %i\n%!"
+    dim
+    r1
+    r2
+    excl_radius
+    (List.length points)
 
 let () = main ()
